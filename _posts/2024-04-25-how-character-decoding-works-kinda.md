@@ -11,7 +11,7 @@ Really, the line feed should be there but, I didn't want to get hassled in Code 
 
 This prompted me to look into how character encoding *kinda* works.
 
-I watched a video here: https://www.youtube.com/watch?v=MijmeoH9LT4&t=73s 
+I watched a video here: [](https://www.youtube.com/watch?v=MijmeoH9LT4&t=73s)
 
 And my understanding became this: 
 
