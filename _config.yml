@@ -1,6 +1,13 @@
-theme: minima
+remote_theme: "jekyll/minima@8106bd4"
 
 minima:
   skin: dark
+  
+  social_links:
+    - title: GitHub
+      icon: github
+      url: "https://github.com/benjacksondev"
 
-author: Ben Jackson
+author: benjacksondev
+
+
