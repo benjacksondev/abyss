@@ -3,6 +3,9 @@ title: "How character decoding works — kinda"
 date: 2025-04-25
 ---
 
+> Disclaimer:
+This post isn’t a complete or technically rigorous explanation of UTF-8 decoding. It’s more of a “here’s how I started to wrap my head around it” kind of thing. The Lua code is intentionally simplified — it skips over edge cases like invalid byte sequences, overlong encodings, and error handling. If you're looking for a formal spec, check out [RFC 3629](https://datatracker.ietf.org/doc/html/rfc3629) or the [Unicode Standard](https://www.unicode.org/standard/standard.html).
+
 This series of events came about because of a hidden character in a Pull Request. Essentially the two files appeared identical in Github and there was no visible difference in my ide.
 
 Viewing the code as hex showed the line feed which was not showing in text editors. The original copy did not end with a line feed. 
