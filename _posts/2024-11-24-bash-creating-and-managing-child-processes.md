@@ -3,9 +3,6 @@ title: "Creating some child processes in bash"
 date: 2024-11-24
 ---
 
-
-# Demonstrating Forking and Killing Parent/Child Processes in Bash
-
 The following example can be used to create a Bash script that demonstrates forking and shows how to kill the parent process while also killing the child process.
 
 ## Example
