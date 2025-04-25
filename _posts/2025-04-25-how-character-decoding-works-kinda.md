@@ -1,5 +1,5 @@
 ---
-title: "How-character-decoding-works-kinda"
+title: "How character decoding works — kinda"
 date: 2025-04-25
 ---
 
