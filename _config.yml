@@ -3,6 +3,11 @@ remote_theme: "jekyll/minima@1e8a445"
 minima:
   skin: solarized-dark
   
+  nav_pages:
+    - 
+  
+  hide_site_feed_link: true
+
   social_links:
     - title: GitHub
       icon: github
@@ -14,8 +19,3 @@ minima:
 author: benjacksondev
 
 description: Reasoning my way through dark rooms. 
-
-nav_pages:
-  - 
-
-hide_site_feed_link: true
