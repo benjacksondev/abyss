@@ -147,5 +147,5 @@ As we go over the bytes sequentially inside the for loop, if the left most bit o
 > - There is likely a bug if the last character is a multi-byte character as when it tries to peek the left most bit of the next character the next character is non existent.
 > - I only implemented the characters I was going to decode, rather than the full set too, maybe there is more bugs here as well.
 
-The End.0a
+0a
 
