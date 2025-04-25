@@ -59,13 +59,13 @@ Above, I created a table/map in lua of the ASCII characters I was going to try a
 I read in the file contents `Hello World!` (all ASCII characters), access the map with each byte,
  writing them to stdout along the way, and voila, it works.
 
-Then I wanted to extend this into utf-8 and implement a second part, which would handle multi-bytes. This is where things started to get interesting, it's the elegant part I mentioned earlier. How UTF8 works.
+Then I wanted to extend this into UTF-8 and implement a second part, which would handle multi-bytes. This is where things started to get interesting, it's the elegant part I mentioned earlier. How UTF-8 works.
 
 So ASCII characters are 7 bit. So we say, as long as a byte starts with a zero it is an ASCII character, otherwise, it's the extended part and its a multi-byte character.
 
-> Each part of a multi-byte has begins with an active bit, i.e. the left most bit is a 1. By peeking the left most bit of the next byte we can tell if the multi-byte continues or ends.
+> Each byte of a multi-byte begins with an active bit, i.e. the left most bit of the byte is on/1. Aswell, by peeking the left most bit of the next byte we can tell if the multi-byte continues or ends.
 
-To implement this, I decided to start with a tree type structure containing the extended part which I could walk sequentially with each byte until I reached a character, print the character, and continue.
+To implement this, I decided to start with a tree type structure containing the extended part which I could walk sequentially with each byte until I reach a character, print the character, and continue.
 
 Which ended up like this:
 
@@ -138,11 +138,11 @@ io.write(multi_byte_map[12]) -- write LF
 
 ```
 
-As we go over the bytes sequentially inside the for loop, if the left most bit of the current byte is 1 we know it is a multi-byte char, I start appending it to a list (table). We know we have reached the end of a multi-byte char by peeking the next byte. We then take the list of multi-byte chars and pass it to a recursive function which will walk over the multi-byte map until it reaches its character. We can then continue to the next char.
+As we go over the bytes sequentially inside the for loop, if the left most bit of the current byte is 1 we know it is a multi-byte char, We start appending it to a list (table). We know we have reached the end of a multi-byte char by peeking the next byte. We then take the list of multi-byte chars and pass it to a recursive function which will walk over the multi-byte map until it reaches a character. We write the character to stdout and then we can then continue to the next char.
 
 > Notes: 
-> - There is likely a bug if the last character is a multi-byte character as when it tries to peek the left most bit of the next character the next character does not exist.
-> - I only implemented the characters I was going to decode, rather than the full set.
+> - There is likely a bug if the last character is a multi-byte character as when it tries to peek the left most bit of the next character the next character is non existent.
+> - I only implemented the characters I was going to decode, rather than the full set too, maybe there is more bugs here as well.
 
 The End.0a
 
