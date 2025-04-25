@@ -7,6 +7,9 @@ minima:
     - title: GitHub
       icon: github
       url: "https://github.com/benjacksondev"
+    - title: Linkedin
+      icon: linkedin
+      url: "https://www.linkedin.com/in/benjacksondev"
 
 author: benjacksondev
 
