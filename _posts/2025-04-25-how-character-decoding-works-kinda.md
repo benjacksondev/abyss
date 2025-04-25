@@ -6,19 +6,19 @@ date: 2025-04-25
 > Disclaimer:
 This post isn’t a complete or technically rigorous explanation of UTF-8 decoding. It’s more of a “here’s how I started to wrap my head around it” kind of thing. The Lua code is intentionally simplified — it skips over edge cases like invalid byte sequences, overlong encodings, and error handling. If you're looking for a formal spec, check out [RFC 3629](https://datatracker.ietf.org/doc/html/rfc3629) or the [Unicode Standard](https://www.unicode.org/standard/standard.html).
 
-This series of events came about because of a hidden character in a Pull Request. Essentially the two files appeared identical in GitHub and there was no visible difference in my IDE.
+This deeper dive into things came about because I had a file show a change in a PR where the before and after were identical in the GitHub ui, and even locally there was no visible difference in my IDE.
 
-Viewing the source code as hex showed the line feed which was not showing in text editors. The original copy did not end with a line feed. 
+Viewing the source code as hex showed a line feed a the end of the file which was not showing in text editors. The original copy did not end with a line feed. 
 
-Really, the line feed should be there, but I didn't want to get hassled in code review, so I ran `truncate -s -1 file_name`, removing the last byte from the file.
+Really, the line feed should be there, ~~but I didn't want to get hassled in code review~~, actually, it's more like I didn't want to accidently break something, it's old code, and the system's possibly fragile, so I ran `truncate -s -1 file_name`, removing the last byte from the file. 
 
-This prompted me to look into how character encoding works.
+This is essentially what sent me down the rabbit hole of how character encoding/decoding works a little bit more than I understood already.
 
 I watched a video here: [YouTube](https://www.youtube.com/watch?v=MijmeoH9LT4&t=73s)
 
 And my understanding became this: 
 
-There was 7-bit ASCII, this was ok, but limited amount of characters available. With more bits, came more character sets. As with most things without a standard, things get pretty messy. Consequently, the Unicode Consortium put together a reasonable standard, which was backwards compatible with ASCII. Then UTF-8 was created as an implementation of Unicode, which is simply put, somewhat elegant.
+There was 7-bit ASCII, this was ok, but limited amount of characters available. With more bits, came more character sets. As with most things without a standard, things get pretty messy. Consequently, the Unicode Consortium put together a reasonable standard, which was backwards compatible with ASCII. Then UTF-8 was created as an implementation of Unicode, which is, put simply, somewhat elegant.
 
 So, then I wanted to make sure I understood it in a little bit more low-level detail, and I've been learning lua, so I decided I would try and decode some ASCII in lua. It was pretty easy and looked something like this.
 
