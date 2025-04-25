@@ -1,5 +1,5 @@
 ---
-title: "Bash: Creating and Managing Child Processes"
+title: "Creating some child processes in bash"
 date: 2024-11-24
 ---
 
