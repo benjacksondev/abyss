@@ -1,7 +1,7 @@
 remote_theme: "jekyll/minima@1e8a445"
 
 minima:
-  skin: dark
+  skin: solarized-dark
   
   social_links:
     - title: GitHub
@@ -16,4 +16,6 @@ author: benjacksondev
 description: Reasoning my way through dark rooms. 
 
 nav_pages:
+  - 
 
+hide_site_feed_link: true
