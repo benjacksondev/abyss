@@ -1,6 +1,6 @@
 ---
 title: "Bash: Creating and Managing Child Processes"
-date: Demonstrating Forking and Killing Parent/Child Processes in Bash
+date: 2024-11-24
 ---
 
 
