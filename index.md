@@ -1,4 +1,5 @@
 ---
-title: Welcome to my blog
+title: Welcome to the abyss
 ---
 
+Reasoning my way through dark rooms.
