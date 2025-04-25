@@ -1,5 +1,5 @@
 ---
-title: "How character decoding works — kinda"
+title: "A journey into character decoding"
 date: 2025-04-25
 ---
 
@@ -66,16 +66,16 @@ Then I wanted to extend this into UTF-8 and implement a second part, which would
 
 So ASCII characters are 7 bit. So we say, as long as a byte starts with a zero it is an ASCII character, otherwise, it's the extended part and its a multi-byte character.
 
-> Each byte of a multi-byte begins with an active bit, i.e. the left-most bit of the byte is on/1. As well, by peeking the left-most bit of the next byte we can tell if the multi-byte continues or ends.
+> Each byte of a multi-byte begins with an active bit, i.e. the left-most bit of the byte is on/1/active. By peeking the left-most bit of the next byte we can tell if the multi-byte continues or ends.
 
-To implement this, I decided to start with a tree type structure containing the extended part which I could walk sequentially with each byte until I reach a character, print the character, and continue.
+To implement this, I decided to start with a tree type structure containing the extended parts which I could walk sequentially with each byte until I reach a character, print the character, and continue.
 
 Which ended up like this:
 
 ```lua
 -- Writes extended part of UTF-8 and original ASCII characters to file. UNCOMMENT TO CREATE THE FILE
 --local file = io.open("utf8", "w")
---file:write("¢harmeleon")
+--file:write("¢harmele")
 --file:close()
 
 local file = io.open("utf8", "r")
@@ -84,8 +84,8 @@ if file == nil then
   os.exit(-1)
 end
 
-local file_contents = file:read()
-if file_contents == nil then os.exit() end
+local file_ctents = file:read()
+if file_ctents == nil then os.exit() end
 
 local multi_byte_map = {
   [72]  = "H",
@@ -109,7 +109,7 @@ local multi_byte_map = {
 }
 
 -- Recursively walk over list (table) of bytes to get multi byte char
-local function get_char(bytes, map)
+local functi get_char(bytes, map)
   if type(map) == "string" then return map end
   local first_byte = bytes[1]
   table.remove(bytes, 1)
@@ -120,13 +120,13 @@ local function get_char(bytes, map)
 end
 
 local multi_byte_char = {}
-for i = 1, #file_contents do
-  local hex = string.byte(file_contents, i)
+for i = 1, #file_ctents do
+  local hex = string.byte(file_ctents, i)
   local left_most_bit = (hex >> 7) & 1
   if left_most_bit == 1 then
     table.insert(multi_byte_char, hex)
 
-    local peek = string.byte(file_contents, i + 1)
+    local peek = string.byte(file_ctents, i + 1)
     local peeked_left_most_bit = (peek >> 7) & 1
 
     if peeked_left_most_bit == 0 then
@@ -141,7 +141,7 @@ io.write(multi_byte_map[12]) -- write LF
 
 ```
 
-As we go over the bytes sequentially inside the for loop, if the left most bit of the current byte is 1 we know it is a multi-byte char, We start appending it to a list (table). We know we have reached the end of a multi-byte char by peeking the next byte. We then take the list of multi-byte chars and pass it to a recursive function which will walk over the multi-byte map until it reaches a character. We write the character to stdout and then we can continue to the next char.
+As we go over the bytes sequentially inside the for loop, if the left most bit of the current byte is 1 we know it is a multi-byte char, We start appending it to a list (table). We know we have reached the end of a multi-byte char by peeking the next byte. We then take the list of multi-byte chars and pass it to a recursive functi which will walk over the multi-byte map until it reaches a character. We write the character to stdout and then we can ctinue to the next char.
 
 > Notes: 
 > - There is likely a bug if the last character is a multi-byte character as when it tries to peek the left most bit of the next character the next character is non existent.
