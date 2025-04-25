@@ -12,7 +12,7 @@ Viewing the source code as hex showed the line feed which was not showing in tex
 
 Really, the line feed should be there, but I didn't want to get hassled in code review, so I ran `truncate -s -1 file_name`, removing the last byte from the file.
 
-This prompted me to look into how character encoding *kinda* works.
+This prompted me to look into how character encoding works.
 
 I watched a video here: [YouTube](https://www.youtube.com/watch?v=MijmeoH9LT4&t=73s)
 
@@ -20,10 +20,10 @@ And my understanding became this:
 
 There was 7-bit ASCII, this was ok, but limited amount of characters available. With more bits, came more character sets. As with most things without a standard, things get pretty messy. Consequently, the Unicode Consortium put together a reasonable standard, which was backwards compatible with ASCII. Then UTF-8 was created as an implementation of Unicode, which is simply put, somewhat elegant.
 
-So, then I wanted to make sure I understood it in a little bit more low-level detail, and I've been learning lua, so I started implementing ASCII in lua. It was pretty easy and looked something like this.
+So, then I wanted to make sure I understood it in a little bit more low-level detail, and I've been learning lua, so I decided I would try and decode some ASCII in lua. It was pretty easy and looked something like this.
 
 ```lua
--- Writes extended part of utf8 and original ascii characters to file. UNCOMMENT TO CREATE THE FILE
+-- Writes extended part of UTF-8 and original ASCII characters to file. UNCOMMENT TO CREATE THE FILE
 -- local file = io.open("ascii", "w")
 -- file:write("Hello, world!\n")
 -- file:close()
@@ -73,7 +73,7 @@ To implement this, I decided to start with a tree type structure containing the 
 Which ended up like this:
 
 ```lua
--- Writes extended part of utf8 and original ascii characters to file. UNCOMMENT TO CREATE THE FILE
+-- Writes extended part of UTF-8 and original ASCII characters to file. UNCOMMENT TO CREATE THE FILE
 --local file = io.open("utf8", "w")
 --file:write("¢harmeleon")
 --file:close()
