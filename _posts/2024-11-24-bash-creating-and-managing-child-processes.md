@@ -1,5 +1,5 @@
 ---
-title: "Creating some child processes in bash"
+title: "Creating child processes in bash"
 date: 2024-11-24
 ---
 
