@@ -1,4 +1,4 @@
- ---
+---
 title: "A journey into character decoding"
 date: 2025-04-25
 ---
