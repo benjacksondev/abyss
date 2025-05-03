@@ -10,14 +10,14 @@ This deeper dive into character encoding came about because I had an issue where
 
 Viewing the source code as hex showed a line feed at the end of the file, which was not showing in text editors. The original copy did not end with a line feed.
 
-The line feed should be there,but the systems are not greatly tested, and I didn’t want to accidentally break something. It’s old code, and the system’s possibly fragile, so I ran truncate -s -1 file_name, removing the last byte from the file, and merged my changes without the added line feed.
-This is essentially what sent me down the rabbit hole of how character encoding/decoding works slightly more than I understood already.
+The line feed should be there, but the systems are not greatly tested, and I didn’t want to break something accidentally. It’s old code, and the system’s possibly fragile, so I ran truncate -s -1 file_name, removing the last byte from the file, and merged my changes without the added line feed.
+This is what sent me down the rabbit hole of how character encoding/decoding works more than I understood already.
 
 I watched a video here: [YouTube](https://www.youtube.com/watch?v=MijmeoH9LT4&t=73s)
 
 And my understanding became this:
 
-There was 7-bit ASCII, which was okay but limited the number of characters available. With more bits came more character sets. As with most things without a standard, things get pretty messy. Consequently, the Unicode Consortium put together a reasonable standard that was backwards compatible with ASCII. Then, after some iteration, UTF-8 was created as an implementation of Unicode.
+There was 7-bit ASCII, which was okay but limited the number of characters available. With more bits came more character sets. As with most things without a standard, things get pretty messy. Consequently, the Unicode Consortium put together a reasonable standard that was backwards compatible with ASCII. Then, after some iterations, UTF-8 was created as an implementation of Unicode.
 
 I wanted to make sure I understood it in a little bit more low-level detail, and I’ve been learning Lua, so I decided to try decoding some ASCII in Lua. It was pretty easy and looked something like this.
 
