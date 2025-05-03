@@ -268,6 +268,8 @@ end
 
 local utf8_chars = map_bytes_as_utf8(bytes, {}, {}, 1)
 
+// get character at nth byte
+//  The naming is bad, but I wanted it not to be too wide in print_chars(...), or too high, for the post.
 local function gcnb(char, n)
   return char[n]
 end
