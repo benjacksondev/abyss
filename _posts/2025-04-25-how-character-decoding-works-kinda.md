@@ -61,7 +61,7 @@ Above, I created a table/map in Lua of the ASCII characters I would try to decod
 
 I read in the file contents, `Hello World!` (all ASCII characters), access the map with each byte, writing them to stdout along the way; voila, it works.
 
-Then, I wanted to extend this into a UTF-8 implementation and implement multibytes, which would handle multibytes.
+Then, I wanted to extend this into a UTF-8 implementation which would handle multibytes.
 
 How UTF-8 works.
 
