@@ -6,21 +6,20 @@ date: 2025-04-25
 > Disclaimer:
 This post isn’t a complete or technically rigorous explanation of UTF-8 decoding. It’s more of a “here’s how I started to wrap my head around it” kind of thing. The Lua code is intentionally simplified — it skips over edge cases like invalid byte sequences, overlong encodings, and error handling. If you're looking for a formal spec, check out [RFC 3629](https://datatracker.ietf.org/doc/html/rfc3629) or the [Unicode Standard](https://www.unicode.org/standard/standard.html).
 
-This deeper dive into character encoding came about because I had an issue where Git was claiming a change in an editted file where the before and after line were identical in the GitHub ui, and even locally, comparing diff, there was no visible difference in my IDE.
+This deeper dive into character encoding came about because I had an issue where Git claimed a change in an edited file where the before and after lines were identical in the GitHub UI, and even locally, comparing diff, there was no visible difference in my IDE.
 
-Viewing the source code as hex showed a line feed at the end of the file which was not showing in text editors. The original copy did not end with a line feed. 
+Viewing the source code as hex showed a line feed at the end of the file, which was not showing in text editors. The original copy did not end with a line feed.
 
-Really, the line feed should be there,but the systems not greatly tested, and I didn't want to accidently break something, it's old code, and the system's possibly fragile, so I ran `truncate -s -1 file_name`, removing the last byte from the file, and merged my changes without the added line feed. 
-
-This is essentially what sent me down the rabbit hole of how character encoding/decoding works a little bit more than I understood already.
+The line feed should be there,but the systems are not greatly tested, and I didn’t want to accidentally break something. It’s old code, and the system’s possibly fragile, so I ran truncate -s -1 file_name, removing the last byte from the file, and merged my changes without the added line feed.
+This is essentially what sent me down the rabbit hole of how character encoding/decoding works slightly more than I understood already.
 
 I watched a video here: [YouTube](https://www.youtube.com/watch?v=MijmeoH9LT4&t=73s)
 
-And my understanding became this: 
+And my understanding became this:
 
-There was 7-bit ASCII, this was ok, but limited amount of characters available. With more bits, came more character sets. As with most things without a standard, things get pretty messy. Consequently, the Unicode Consortium put together a reasonable standard, which was backwards compatible with ASCII. Then, after some iteration, UTF-8 was created as an implementation of Unicode.
+There was 7-bit ASCII, which was okay but limited the number of characters available. With more bits came more character sets. As with most things without a standard, things get pretty messy. Consequently, the Unicode Consortium put together a reasonable standard that was backwards compatible with ASCII. Then, after some iteration, UTF-8 was created as an implementation of Unicode.
 
-So, then I wanted to make sure I understood it in a little bit more low-level detail, and I've been learning Lua, so I decided I would try and decode some ASCII in lua. It was pretty easy and looked something like this.
+I wanted to make sure I understood it in a little bit more low-level detail, and I’ve been learning Lua, so I decided to try decoding some ASCII in Lua. It was pretty easy and looked something like this.
 
 ```lua
 -- Writes extended part of UTF-8 and original ASCII characters to file. UNCOMMENT TO CREATE THE FILE
@@ -58,16 +57,17 @@ end
 io.write(ascii_map[12]) -- write LF
 ```
 
-Above, I created a table/map in lua of the ASCII characters I was going to try and decode. 
-I read in the file contents `Hello World!` (all ASCII characters), access the map with each byte, writing them to stdout along the way, and voila, it works.
+Above, I created a table/map in Lua of the ASCII characters I would try to decode. 
 
-Then I wanted to extend this into a UTF-8 implementation and implement multibytes, which would handle multi-bytes.
+I read in the file contents, `Hello World!` (all ASCII characters), access the map with each byte, writing them to stdout along the way; voila, it works.
+
+Then, I wanted to extend this into a UTF-8 implementation and implement multibytes, which would handle multibytes.
 
 How UTF-8 works.
 
-So ASCII characters are 7 bit. So we say, as long as the left most bit of a byte starts with a zero, it is an ASCII character, otherwise its a multibyte character. If the first two bits of the first byte is a one but the second bit is a zero then its a two-byte character. If the first two bits of the first byte are a one but the third bit is a zero, then it is a two-byte char, if the first three bits of the first byte are a one but the fourth bit is a zero then it is a three-byte char. Finally, if the first four bits are a one it is a four-byte char.
+So ASCII characters are 7-bit. So, as long as the leftmost bit of a byte starts with a zero, it is an ASCII character; otherwise, it's a multibyte character. If the first two bits of the first byte are a one, but the second bit is a zero, then it's a two-byte character. If the first two bits of the first byte are one but the third bit is a zero, then it is a two-byte char; if the first three bits of the first byte are one but the fourth bit is a zero, then it is a three-byte char. Finally, if the first four bits are a one, it is a four-byte char.
 
-To implement this, I decided to start with a tree type structure containing the extended parts which I could walk sequentially with each byte until I reach a character, print the character, and continue.
+To implement this, I decided to start with a tree-type structure containing the extended parts. I could walk sequentially with each byte until I reached a character, print the character, and continue.
 
 Which ended up like this:
 
@@ -291,7 +291,7 @@ end
 print_chars(utf8_chars, 1)
 ```
 
-> Some refactoring occured. Notably I moved toward a more declaritive programming approach using functional programming techniques.
+> Some refactoring occurred. Notably, I moved toward a more declarative programming approach using functional programming techniques.
 
 0a
 
