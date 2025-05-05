@@ -229,14 +229,6 @@ end
 
 local bytes = get_bytes_from_string(file_contents, {}, 1)
 
--- local function print_bytes(bytes, i)
---   if i > #bytes then return end
---   print(bytes[i])
---   print_bytes(bytes, i + 1)
--- end
-
--- print_bytes(bytes, 1)
-
 local function map_bytes_as_utf8(bytes, map_to_return, bytes_of_char, i)
   if i > #bytes then
     return map_to_return
@@ -293,7 +285,17 @@ end
 print_chars(utf8_chars, 1)
 ```
 
-> Some refactoring occurred. Notably, I moved toward a more declarative programming approach using functional programming techniques.
+Several functions are called in succession. 
+
+`get_bytes_from_string`: creates an array of bytes from a string.
+
+`map_bytes_as_utf8`: recursively traverses an array of bytes, creating an array of byte arrays grouped by char.
+
+`print_chars`: recursively traverses an array of byte arrays using get access to access global, multi_byte_map and prints its associated character.
+
+By extending `multi_byte_map` to hold all of the UTF-8 characters, the script can take any UTF-8 file, read it in as a byte array, and print the characters to stdout.
+
+...
 
 0a
 
