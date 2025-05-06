@@ -67,7 +67,7 @@ How UTF-8 works.
 
 So, ASCII characters are 7-bit. So, as long as the leftmost bit of a byte starts with a zero, it is an ASCII character; otherwise, it's a multibyte character. If the first two bits of the first byte are active, but the second bit is a zero, then it's a two-byte character. If the first two bits of the first byte are active but the third bit is a zero, then it is a two-byte char; if the first three bits of the first byte are active but the fourth bit is a zero, then it is a three-byte char. Finally, if the first four bits are active, it is a four-byte char.
 
-I started with a tree-type structure containing the extended parts, and I could walk sequentially with each byte until I reached a character, print the character, and continue.
+I started with a tree-type structure containing the extended parts so I would be able to walk over each byte until I reach a character, then print the character, and repeat, for each character.
 
 Which ended up like this:
 
