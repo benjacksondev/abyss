@@ -65,9 +65,9 @@ Then, I wanted to extend this into a UTF-8 implementation which would handle mul
 
 How UTF-8 works.
 
-So, ASCII characters are 7-bit. So, as long as the leftmost bit of a byte starts with a zero, it is an ASCII character; otherwise, it's a multibyte character. If the first two bits of the first byte are a one, but the second bit is a zero, then it's a two-byte character. If the first two bits of the first byte are one but the third bit is a zero, then it is a two-byte char; if the first three bits of the first byte are one but the fourth bit is a zero, then it is a three-byte char. Finally, if the first four bits are a one, it is a four-byte char.
+So, ASCII characters are 7-bit. So, as long as the leftmost bit of a byte starts with a zero, it is an ASCII character; otherwise, it's a multibyte character. If the first two bits of the first byte are active, but the second bit is a zero, then it's a two-byte character. If the first two bits of the first byte are active but the third bit is a zero, then it is a two-byte char; if the first three bits of the first byte are active but the fourth bit is a zero, then it is a three-byte char. Finally, if the first four bits are active, it is a four-byte char.
 
-To implement this, I decided to start with a tree-type structure containing the extended parts. I could walk sequentially with each byte until I reached a character, print the character, and continue.
+I started with a tree-type structure containing the extended parts, and I could walk sequentially with each byte until I reached a character, print the character, and continue.
 
 Which ended up like this:
 
