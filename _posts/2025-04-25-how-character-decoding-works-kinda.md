@@ -10,7 +10,7 @@ This deeper dive into character encoding came about because I had an issue where
 
 Viewing the source code as hex showed a line feed at the end of the file, which was not showing in text editors. The original copy did not end with a line feed.
 
-The line feed should be there, but the systems are not greatly tested, and I didn’t want to break something accidentally. It’s old code, and the system’s possibly fragile, so I ran truncate -s -1 file_name, removing the last byte from the file, and merged my changes without the added line feed.
+The line feed should be there, but the systems are not greatly tested, and I didn’t want to break something accidentally. It’s old code, and the system’s possibly fragile, so I ran `truncate -s -1 file_name`, removing the last byte from the file, and merged my changes without the added line feed.
 This is what sent me down the rabbit hole of how character encoding/decoding works more than I understood already.
 
 I watched a video here: [YouTube](https://www.youtube.com/watch?v=MijmeoH9LT4&t=73s)
@@ -65,7 +65,7 @@ Then, I wanted to extend this into a UTF-8 implementation which would handle mul
 
 How UTF-8 works.
 
-So ASCII characters are 7-bit. So, as long as the leftmost bit of a byte starts with a zero, it is an ASCII character; otherwise, it's a multibyte character. If the first two bits of the first byte are a one, but the second bit is a zero, then it's a two-byte character. If the first two bits of the first byte are one but the third bit is a zero, then it is a two-byte char; if the first three bits of the first byte are one but the fourth bit is a zero, then it is a three-byte char. Finally, if the first four bits are a one, it is a four-byte char.
+So, ASCII characters are 7-bit. So, as long as the leftmost bit of a byte starts with a zero, it is an ASCII character; otherwise, it's a multibyte character. If the first two bits of the first byte are a one, but the second bit is a zero, then it's a two-byte character. If the first two bits of the first byte are one but the third bit is a zero, then it is a two-byte char; if the first three bits of the first byte are one but the fourth bit is a zero, then it is a three-byte char. Finally, if the first four bits are a one, it is a four-byte char.
 
 To implement this, I decided to start with a tree-type structure containing the extended parts. I could walk sequentially with each byte until I reached a character, print the character, and continue.
 
