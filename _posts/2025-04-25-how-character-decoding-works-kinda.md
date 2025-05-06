@@ -19,7 +19,7 @@ And my understanding became this:
 
 There was 7-bit ASCII, which was okay but limited the number of characters available. With more bits came more character sets. As with most things without a standard, things get pretty messy. Consequently, the Unicode Consortium put together a reasonable standard that was backwards compatible with ASCII. Then, after some iterations, UTF-8 was created as an implementation of Unicode.
 
-I wanted to make sure I understood it in a little bit more low-level detail, and I’ve been learning Lua, so I decided to try decoding some ASCII in Lua. It was pretty easy and looked something like this.
+I wanted to look at character encoding in a lower-level detail, and I’ve been learning Lua, so I decided to try decoding some ASCII in Lua. It was pretty easy and looked something like this.
 
 ```lua
 -- Writes extended part of UTF-8 and original ASCII characters to file. UNCOMMENT TO CREATE THE FILE
