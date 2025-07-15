@@ -56,13 +56,9 @@ end
 io.write(ascii_map[12]) -- write LF
 ```
 
-Here, I created a table mapping byte values to characters in Lua of the ASCII characters I would try to decode. 
+Here, I created a table mapping byte values to ASCII characters. The script reads the contents of the file (Hello, world! — all ASCII), and prints each character to stdout by looking it up in the map. Simple and it works.
 
-I read in the file contents, `Hello World!` (all ASCII characters), access the map with each byte, writing them to stdout along the way; voila, it worked.
-
-Then, I wanted to extend this into a UTF-8 implementation which would handle multibytes.
-
-How UTF-8 works.
+Then I wanted to extend this to handle UTF-8, which includes multibyte characters.
 
 How UTF-8 Works (At a Glance)
 
