@@ -6,20 +6,19 @@ date: 2025-04-25
 > Disclaimer:
 This post isn’t a complete or technically rigorous explanation of UTF-8 decoding. It’s more of a “here’s how I started to wrap my head around it” kind of thing. The Lua code is intentionally simplified — it skips over edge cases like invalid byte sequences, overlong encodings, and error handling. If you're looking for a formal spec, check out [RFC 3629](https://datatracker.ietf.org/doc/html/rfc3629) or the [Unicode Standard](https://www.unicode.org/standard/standard.html).
 
-This deeper dive into character encoding came about because I had an issue where Git claimed a change in an edited file where the before and after lines were identical in the GitHub UI, and even locally, comparing diff, there was no visible difference in my IDE.
+I came to this deeper understanding of character encoding after running into a strange issue in the Github UI. The before and after lines looked identical in the GitHub UI for my commit, even locally there was no visible difference in the diff. However, viewing the source code as hex for both files revealed a subtle difference — an extra line feed at the end of the file.
 
-Viewing the source code as hex showed a line feed at the end of the file, which was not showing in text editors. The original copy did not end with a line feed.
+The line feed should be there, and I found most IDEs add it transparently to the user. But, because the systems I was working on are not greatly tested, and I didn’t want to break something accidentally, I ran `truncate -s -1 file_name`, removing the last byte from the file, merged my changes, and moved on.
 
-The line feed should be there, but the systems are not greatly tested, and I didn’t want to break something accidentally. It’s old code, and the system’s possibly fragile, so I ran `truncate -s -1 file_name`, removing the last byte from the file, and merged my changes without the added line feed.
-This is what sent me down the rabbit hole of how character encoding/decoding works more than I understood already.
+But this got me wondering how character encoding/decoding really works.
 
 I watched a video here: [YouTube](https://www.youtube.com/watch?v=MijmeoH9LT4&t=73s)
 
 And my understanding became this:
 
-There was 7-bit ASCII, which was okay but limited the number of characters available. With more bits came more character sets. As with most things without a standard, things get pretty messy. Consequently, the Unicode Consortium put together a reasonable standard that was backwards compatible with ASCII. Then, after some iterations, UTF-8 was created as an implementation of Unicode.
+There was 7-bit ASCII, which worked fine for English text but limited the range of characters. With more bits came more character sets — and, as is often the case without a standard, things got messy. Eventually, the Unicode Consortium stepped in and put together a reasonable standard which was backwards compatible with ASCII. And, after several iterations, UTF-8 emerged as a widely accepted implementation of Unicode.
 
-I wanted to look at character encoding in a lower-level detail, and I’ve been learning Lua, so I decided to try decoding some ASCII in Lua. It was pretty easy and looked something like this.
+I wanted to look at character encoding in a lower-level detail, and since I’ve been learning Lua, I decided to try decoding some ASCII in Lua first. It turned out to be straightforward.
 
 ```lua
 -- Writes extended part of UTF-8 and original ASCII characters to file. UNCOMMENT TO CREATE THE FILE
@@ -57,19 +56,29 @@ end
 io.write(ascii_map[12]) -- write LF
 ```
 
-Above, I created a table/map in Lua of the ASCII characters I would try to decode. 
+Here, I created a table mapping byte values to characters in Lua of the ASCII characters I would try to decode. 
 
-I read in the file contents, `Hello World!` (all ASCII characters), access the map with each byte, writing them to stdout along the way; voila, it works.
+I read in the file contents, `Hello World!` (all ASCII characters), access the map with each byte, writing them to stdout along the way; voila, it worked.
 
 Then, I wanted to extend this into a UTF-8 implementation which would handle multibytes.
 
 How UTF-8 works.
 
-So, ASCII characters are 7-bit. So, as long as the leftmost bit of a byte starts with a zero, it is an ASCII character; otherwise, it's a multibyte character. If the first two bits of the first byte are active, but the second bit is a zero, then it's a two-byte character. If the first two bits of the first byte are active but the third bit is a zero, then it is a two-byte char; if the first three bits of the first byte are active but the fourth bit is a zero, then it is a three-byte char. Finally, if the first four bits are active, it is a four-byte char.
+How UTF-8 Works (At a Glance)
 
-I started with a tree-type structure containing the extended parts so I would be able to walk over each byte until I reach a character, then print the character, and repeat, for each character.
+ASCII characters use 7 bits, so if the most significant bit of a byte is 0, it’s just an ASCII character. But if the first bit is a 1, then it’s part of a multibyte sequence.
 
-Which ended up like this:
+The number of consecutive 1s at the start of a byte tells us how many bytes are in the character:
+- 0xxxxxxx — 1 byte (ASCII)
+- 110xxxxx — 2-byte character
+- 1110xxxx — 3-byte character
+- 11110xxx — 4-byte character
+
+Each continuation byte starts with 10xxxxxx.
+
+To decode these, I started building a tree-like structure in Lua. Each byte either leads to a character or to another nested table of possible continuations, eventually mapping to the character once the sequence is complete.
+
+The code got more complex, but it let me walk over each byte, check the map, and print the decoded character.
 
 ```lua
 -- Writes extended part of UTF-8 and original ASCII characters to file. UNCOMMENT TO CREATE THE FILE
@@ -285,15 +294,11 @@ end
 print_chars(utf8_chars, 1)
 ```
 
-Several functions are called in succession. 
+The rest of the map continues in that style. If the current byte has a nested table, I check the next byte(s) and keep digging until I hit a character.
 
-`get_bytes_from_string`: creates an array of bytes from a string.
+This was a fun way to get closer to how encoding really works. It’s also a reminder of how powerful UTF-8 is — flexible, backward compatible, and yet still human-readable (in a way) at the byte level.
 
-`map_bytes_as_utf8`: recursively traverses an array of bytes, creating an array of byte arrays grouped by char.
-
-`print_chars`: recursively traverses an array of byte arrays using get access to access global, multi_byte_map and prints its associated character.
-
-By extending `multi_byte_map` to hold all of the UTF-8 characters, the script can take any UTF-8 file, read it in as a byte array, and print the characters to stdout.
+I’ll probably clean this up into a proper decoder eventually, but for now, it was a great learning experiment.
 
 ...
 
